@@ -1,0 +1,33 @@
+{
+  "skill_name": "{{NAME}}",
+  "evals": [
+    {
+      "id": "happy-path",
+      "prompt": "<A realistic user prompt that should trigger this skill and produce a successful run. Include file paths, casual context, specific names — what a real user would type.>",
+      "expected_output": "<Human-readable description of what success looks like.>",
+      "files": [],
+      "assertions": [
+        "<Specific, observable, programmatically-verifiable check #1>",
+        "<Check #2 — countable / present / valid / matches schema>"
+      ]
+    },
+    {
+      "id": "near-miss-negative",
+      "prompt": "<A prompt that shares keywords or concepts with the skill's domain but actually needs different work. Should NOT trigger this skill.>",
+      "expected_output": "The skill is not invoked; the agent handles the request without it.",
+      "files": [],
+      "assertions": [
+        "The skill was not loaded for this prompt"
+      ]
+    },
+    {
+      "id": "boundary",
+      "prompt": "<An edge case — malformed input, an ambiguous request, or a case where the skill's value is marginal. Tests how the skill handles a hard situation.>",
+      "expected_output": "<What the skill should do at the boundary — surface the issue to the user, decline gracefully, ask a clarifying question, or apply a documented fallback.>",
+      "files": [],
+      "assertions": [
+        "<Specific check for the boundary behavior>"
+      ]
+    }
+  ]
+}

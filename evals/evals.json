@@ -1,0 +1,64 @@
+{
+  "skill_name": "skillcook",
+  "evals": [
+    {
+      "id": "doc-runbook-single-skill",
+      "prompt": "I have a Postgres replica-lag runbook at evals/files/sample_runbook.md. Turn it into a skill at /tmp/oncall-pg-lag.",
+      "expected_output": "A new skill directory at /tmp/oncall-pg-lag/ containing a valid SKILL.md (frontmatter, body, gotchas), an evals/evals.json starter, and passing scripts/validate.py.",
+      "files": ["evals/files/sample_runbook.md"],
+      "assertions": [
+        "/tmp/oncall-pg-lag/SKILL.md exists",
+        "Frontmatter has name, description, and name equals 'oncall-pg-lag'",
+        "Description is under 1024 chars and contains at least one 'Use when' or imperative trigger phrase",
+        "Body contains a Gotchas section with at least 3 entries (the runbook has runbook-specific gotchas to lift)",
+        "Body contains a Workflow section with checklist items",
+        "Body line count is under 500",
+        "evals/evals.json exists with at least one eval",
+        "uv run scripts/validate.py /tmp/oncall-pg-lag exits 0"
+      ]
+    },
+    {
+      "id": "prompt-input-with-followups",
+      "prompt": "Make me a skill for reviewing Python diffs.",
+      "expected_output": "skillcook does not silently fabricate a generic Python-review skill. It asks 2-4 follow-up questions to surface project specifics, gotchas, and the unit of work before drafting. If specifics are still absent, it warns the skill may not beat the baseline agent.",
+      "files": [],
+      "assertions": [
+        "The agent asks at least 2 follow-up questions before drafting frontmatter",
+        "The follow-up questions surface project specifics, gotchas, or input/output shape — not generic 'what do you mean by review'",
+        "If the user refuses to provide specifics, the agent flags that the skill will likely be a generic restatement and may not beat the baseline"
+      ]
+    },
+    {
+      "id": "doc-covers-multiple-units",
+      "prompt": "Here's our service ops wiki page covering deploy, rollback, and monitoring (~3000 words). Turn this into skills.",
+      "expected_output": "skillcook recognizes the source covers multiple units of work, lists them to the user (deploy / rollback / monitoring), and asks whether to produce all three or focus on one — rather than producing a single mega-skill.",
+      "files": [],
+      "assertions": [
+        "The agent identifies more than one candidate unit of work",
+        "The agent lists the candidate skills explicitly to the user before scaffolding any",
+        "If proceeding with multiple skills, each gets its own directory and its own validate.py pass"
+      ]
+    },
+    {
+      "id": "near-miss-jq-snippet",
+      "prompt": "What's the quickest way to convert this JSON file to YAML? cat foo.json | yq -y .",
+      "expected_output": "The agent answers the question directly without invoking skillcook — there is no skill being requested, the user is asking a one-shot question.",
+      "files": [],
+      "assertions": [
+        "skillcook was not invoked for this prompt",
+        "The response answers the JSON-to-YAML question directly"
+      ]
+    },
+    {
+      "id": "boundary-trivial-source",
+      "prompt": "Here's a one-line note: 'use jq to filter JSON'. Make me a skill out of it.",
+      "expected_output": "skillcook surfaces that the source has no real procedure, gotchas, or project specifics — and either declines to produce a skill or produces a minimal one with an explicit warning that it likely won't beat the baseline agent.",
+      "files": [],
+      "assertions": [
+        "The agent flags that the source is too thin to justify a skill, OR explains the skill will likely not earn its tokens",
+        "If a skill is produced, the description does not contain marketing copy ('powerful', 'comprehensive')",
+        "The agent suggests running the eval loop to confirm value before adopting"
+      ]
+    }
+  ]
+}
