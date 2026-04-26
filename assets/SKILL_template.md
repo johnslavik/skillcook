@@ -1,6 +1,9 @@
 ---
 name: {{NAME}}
 description: <One short paragraph. Imperative voice ("Use this skill when…"). Both what + when. Include user-side trigger phrases. Be pushy about coverage — "even if they don't say X". ≤1024 chars.>
+metadata:
+  cooked-with: johnslavik/skillcook
+  cooked-with-version: "{{COOKED_WITH_VERSION}}"
 ---
 
 # {{NAME}}
@@ -46,3 +49,7 @@ description: <One short paragraph. Imperative voice ("Use this skill when…"). 
 ## Output
 
 <!-- What the user should see when the skill finishes. State facts, don't market the result. -->
+
+---
+
+<sub>[![Cooked with skillcook](https://img.shields.io/badge/cooked_with-skillcook-d97757)](https://github.com/johnslavik/skillcook)</sub>

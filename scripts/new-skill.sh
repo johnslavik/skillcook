@@ -79,8 +79,13 @@ if [[ -s "$skill_md" && $force -eq 0 ]]; then
   exit 1
 fi
 
-# Substitute {{NAME}} in template, write to target.
-sed "s/{{NAME}}/$skill_name/g" "$template_skill" > "$skill_md"
+# Resolve the skillcook version (git short SHA of this checkout, or "unknown").
+cooked_version="$(cd "$skill_root" && git rev-parse --short HEAD 2>/dev/null || echo unknown)"
+
+# Substitute placeholders in template, write to target.
+sed -e "s/{{NAME}}/$skill_name/g" \
+    -e "s/{{COOKED_WITH_VERSION}}/$cooked_version/g" \
+    "$template_skill" > "$skill_md"
 
 evals_json="$target/evals/evals.json"
 if [[ ! -s "$evals_json" || $force -eq 1 ]]; then

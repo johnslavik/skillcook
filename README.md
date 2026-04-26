@@ -1,5 +1,7 @@
 # skillcook
 
+[![Cooked with skillcook](https://img.shields.io/badge/cooked_with-skillcook-d97757)](https://github.com/johnslavik/skillcook)
+
 An [Agent Skill](https://agentskills.io) that turns any source — a document, a prompt, a chat transcript, an ad-hoc description, code — into one or more working Agent Skills.
 
 When the source covers multiple units of work, skillcook produces multiple skills. When the source is too thin to beat a baseline agent, it says so instead of producing dead weight.
@@ -67,6 +69,15 @@ skillcook/
     └── files/
         └── sample_runbook.md
 ```
+
+## Watermark
+
+Every skill produced by skillcook is marked in two places:
+
+- **Frontmatter** — `metadata.cooked-with: johnslavik/skillcook` and `metadata.cooked-with-version: <git-sha>`. Machine-readable; tools can detect skillcook-cooked skills.
+- **Body footer** — a small badge linking back to this repo, visible when the SKILL.md is rendered on GitHub.
+
+Both are added automatically by `scripts/new-skill.sh`. Strip them on any individual skill if you prefer; the validator doesn't enforce them.
 
 ## License
 

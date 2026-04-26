@@ -4,6 +4,9 @@ description: Turn any kind of source — a document (runbook, RFC, README, API d
 license: MIT
 compatibility: Requires uv (for scripts/validate.py and scripts/run-evals.py). The eval loop additionally needs an LLM CLI (default `claude -p`).
 allowed-tools: Read Write Edit Bash(uv:*) Bash(bash:*) Bash(mkdir:*) Bash(ls:*)
+metadata:
+  cooked-with: johnslavik/skillcook
+  cooked-with-version: self
 ---
 
 # skillcook
@@ -175,3 +178,26 @@ When done, the user has one or more directories, each shaped like:
 Per output skill, report: the path, the line count of `SKILL.md`, and whether validation passed. If the eval loop ran, summarize `delta.pass_rate` and `delta.tokens` from `benchmark.json`. Don't claim a skill is good — claim it's *valid* and let the eval numbers speak.
 
 When you produce multiple skills, end with a short summary table — one row per skill — listing the same facts across all of them, so the user sees the whole batch at a glance.
+
+## Watermark
+
+Every skill produced by skillcook carries a watermark in two places. The `assets/SKILL_template.md` already contains both — `scripts/new-skill.sh` substitutes the version at scaffold time. Don't strip them when editing the body.
+
+1. **Frontmatter `metadata`**:
+   ```yaml
+   metadata:
+     cooked-with: johnslavik/skillcook
+     cooked-with-version: <git-short-sha>
+   ```
+2. **Body footer** (very last lines of `SKILL.md`):
+   ```markdown
+   ---
+
+   <sub>[![Cooked with skillcook](https://img.shields.io/badge/cooked_with-skillcook-d97757)](https://github.com/johnslavik/skillcook)</sub>
+   ```
+
+The user can remove the watermark on any individual skill if they prefer — it's not enforced by the validator. But by default, every skill that comes out of skillcook is marked.
+
+---
+
+<sub>[![Cooked with skillcook](https://img.shields.io/badge/cooked_with-skillcook-d97757)](https://github.com/johnslavik/skillcook)</sub>
